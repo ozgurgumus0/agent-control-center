@@ -1,0 +1,17 @@
+# Core
+pandas>=2.2
+openpyxl>=3.1
+reportlab>=4.0
+python-dotenv>=1.0
+
+# LLM agents
+anthropic>=0.104
+
+# MCP server (mcp_server.py)
+mcp>=2.2
+
+# Creative data fetch (Google Sheets, read-only)
+gspread>=6.0
+
+# Tests
+numpy>=1.26

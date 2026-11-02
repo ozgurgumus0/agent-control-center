@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071014">
+  <title>Planner Attribution Network</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071014'/%3E%3Cpath d='M15 39 26 23l10 12 13-18' fill='none' stroke='%235ae6c8' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='49' cy='17' r='5' fill='%23ffb84d'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KX</div>
+        <div><strong>MARKETING OS</strong><span>ALLOCATION + ATTRIBUTION</span></div>
+      </div>
+      <div class="workspace-switch" aria-label="Main workspaces">
+        <button class="workspace-button" data-workspace="planner"><span class="workspace-icon">K</span><span><strong>Planner</strong><small>Budget allocator</small></span></button>
+        <button class="workspace-button active" data-workspace="attribution"><span class="workspace-icon">◎</span><span><strong>Attribution</strong><small>Model + agents</small></span></button>
+      </div>
+      <p class="nav-label">ATTRIBUTION TOOLS</p>
+      <nav id="attributionNav" aria-label="Attribution sections">
+        <button class="nav-item active" data-view="agents"><span>01</span> Network</button>
+        <button class="nav-item" data-view="overview"><span>02</span> Overview</button>
+        <button class="nav-item" data-view="incidents"><span>03</span> Incidents</button>
+        <button class="nav-item" data-view="policy"><span>04</span> Policy</button>
+        <button class="nav-item" data-view="creative"><span>05</span> Creative</button>
+        <button class="nav-item" data-view="loi"><span>06</span> LOI</button>
+      </nav>
+      <div class="safety-card">
+        <p>Safety locks</p>
+        <div><i class="dot safe"></i> Production writes off</div>
+        <div><i class="dot safe"></i> GitHub writes off</div>
+        <div><i class="dot safe"></i> Local notifications</div>
+      </div>
+      <div class="sidebar-foot">LOCAL / 127.0.0.1</div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">MARKETING INTELLIGENCE</p>
+          <h1 id="viewTitle">Agent network</h1>
+        </div>
+        <div class="top-actions">
+          <div id="freshnessChips" class="fresh-chips" aria-label="How old each data source is"></div>
+          <button id="refreshButton" class="icon-button" title="Refresh status" aria-label="Refresh status">↻</button>
+          <button id="runButton" class="primary-button"><span class="pulse"></span> Run agents now</button>
+        </div>
+      </header>
+
+      <section id="overview" class="view">
+        <div id="runSummary" class="run-summary" hidden></div>
+        <div class="creative-toolbar overview-toolbar">
+          <span class="timestamp">The allocation, then what the agents say about it.</span>
+          <a class="secondary-button" href="/api/briefing/pdf" download>Download briefing PDF</a>
+        </div>
+
+        <article class="panel allocation-panel">
+          <div class="panel-head"><div><p class="eyebrow">ALLOCATION · PLANNER</p><h2 id="allocationTitle">Latest plan</h2></div><span id="allocationBadge" class="badge muted">—</span></div>
+          <div id="allocationContent"></div>
+        </article>
+
+        <article class="panel attention-panel">
+          <div class="panel-head"><div><p class="eyebrow">NEEDS YOUR ATTENTION</p><h2>What to look at</h2></div><span id="attentionCount" class="badge muted">—</span></div>
+          <div id="attentionList" class="attention-list"></div>
+        </article>
+
+        <div class="section-intro results-intro"><p class="eyebrow">AGENT RESULTS</p><h2>What each agent found</h2><p>One box per agent: its latest finding, how old its data is, and where to read more. Run agents now refreshes every free agent; the LLM agents run from their own buttons.</p></div>
+        <div id="agentResults" class="result-grid"></div>
+
+        <div class="status-strip">
+          <article><span>Candidate history</span><strong id="weeklyObservations">—</strong><small id="coverageNote">weekly observations</small></article>
+          <article><span>Open incidents</span><strong id="openIncidents">—</strong><small>local review queue</small></article>
+          <article><span>Attribution gate</span><strong id="attributionGate">—</strong><small>controls EV release</small></article>
+          <article><span>Planner v6</span><strong id="plannerStatus" class="mint">—</strong><small id="plannerMeta">CatBoost production safe</small></article>
+        </div>
+
+
+        <div class="overview-grid">
+          <article class="panel readiness-panel">
+            <div class="panel-head"><div><p class="eyebrow">EVIDENCE</p><h2>Attribution readiness</h2></div><span id="readinessBadge" class="badge muted">CHECKING…</span></div>
+            <div class="progress-track" id="historyTrack">
+              <span class="seg legacy" id="historyLegacy"></span>
+              <span class="seg gap" id="historyGap"></span>
+              <span class="seg current" id="historyCurrent"></span>
+            </div>
+            <div class="readiness-line"><strong id="historyWeeks">—</strong><span id="historyGateNote">minimum history gate</span></div>
+            <div id="historySeam" class="seam-note" hidden></div>
+            <div id="historyAuditDecision" class="evidence-note">Checking legacy history…</div>
+            <p id="evidenceInterpretation" class="body-copy"></p>
+          </article>
+
+          <article class="panel runs-panel">
+            <div class="panel-head"><div><p class="eyebrow">ACTIVITY</p><h2>Recent runs</h2></div></div>
+            <div id="runTimeline" class="timeline"></div>
+          </article>
+
+          <article class="panel evidence-panel">
+            <div class="panel-head"><div><p class="eyebrow">CURRENT FINDING</p><h2>What the data supports</h2></div></div>
+            <p class="finding-lead">Monitoring is useful now. EV attribution waits for stronger evidence.</p>
+            <div class="finding-row"><span>Paid-spend prediction</span><strong id="predictionFinding">Did not improve</strong></div>
+            <div class="finding-row"><span>Channel EV adjustment</span><strong>Not allowed</strong></div>
+            <div class="finding-row"><span>Production recommendation</span><strong>None</strong></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="agents" class="view active">
+        <div class="section-intro"><p class="eyebrow">SYSTEM NETWORK</p><h2>One controlled path from data to budget</h2><p>Click a node to see what it does, what it is waiting for and whether it can pass information forward.</p></div>
+        <article class="panel network-panel network-panel-large">
+          <div class="network-shell">
+            <div id="agentNetwork" class="network-graph" aria-label="Detailed attribution and Planner system graph"></div>
+            <aside id="agentInspector" class="node-inspector" aria-live="polite"></aside>
+          </div>
+        </article>
+      </section>
+
+      <section id="incidents" class="view">
+        <div class="section-intro"><p class="eyebrow">REVIEW QUEUE</p><h2>Incidents requiring a human label</h2><p>An anomaly is a prompt to investigate, not proof of cause.</p></div>
+        <div id="incidentList" class="incident-list"></div>
+      </section>
+
+      <section id="policy" class="view">
+        <div class="section-intro"><p class="eyebrow">DETECTION POLICY</p><h2>Safe monitoring thresholds</h2><p>Changes affect future local checks only. They do not change models, source data or allocation budgets.</p></div>
+          <article class="panel command-panel policy-schedule">
+            <div class="panel-head"><div><p class="eyebrow">CONTROL</p><h2>Monitoring schedule</h2></div><span id="monitoringBadge" class="badge muted">PAUSED</span></div>
+            <div class="toggle-row">
+              <div><strong>Enable local monitoring</strong><span>Runs checks only while this app is open.</span></div>
+              <label class="switch"><input id="monitoringEnabled" type="checkbox"><span></span></label>
+            </div>
+            <div class="form-grid">
+              <label>Mode<select id="scheduleMode"><option value="manual">Manual only</option><option value="daily">Daily</option></select></label>
+              <label>Local time<input id="dailyTime" type="time" value="09:15"></label>
+            </div>
+            <p class="fine-print">A scheduled run checks the latest saved measurement table. It does not pull fresh data or change budget allocations.</p>
+            <button id="saveControl" class="secondary-button">Save monitoring control</button>
+          </article>
+
+        <form id="policyForm" class="panel policy-form">
+          <label>Maximum data staleness (days)<input name="max_staleness_days" type="number" min="0" max="30"></label>
+          <label>Same-weekday history points<input name="same_weekday_history_points" type="number" min="4" max="26"></label>
+          <label>Anomaly z-threshold<input name="robust_z_threshold" type="number" min="2" max="10" step="0.1"></label>
+          <label>Persistence window (days)<input name="persistence_window_days" type="number" min="1" max="14"></label>
+          <label>Flags required in window<input name="persistence_min_flags" type="number" min="1" max="14"></label>
+          <label>Incident cooldown (days)<input name="incident_cooldown_days" type="number" min="0" max="30"></label>
+          <div class="form-actions"><button class="primary-button" type="submit">Save policy</button><span id="policyStatus"></span></div>
+        </form>
+      </section>
+
+      <section id="creative" class="view">
+        <div class="section-intro"><p class="eyebrow">CREATIVE AD PERFORMANCE</p><h2>What the creative data says</h2><p>Computed locally from the creative ad performance sheet: spend per ad and the CRM funnel per creative. It describes what happened; budget decisions stay with the team.</p></div>
+        <div class="creative-toolbar">
+          <span id="creativeFreshness" class="timestamp">No creative data yet</span>
+          <a class="secondary-button" href="/api/briefing/pdf" download>Download briefing PDF</a>
+          <button id="creativeRefresh" class="secondary-button">Fetch sheet + recompute</button>
+          <button id="creativeBriefing" class="primary-button">Write briefing</button>
+        </div>
+        <div id="creativeContent" class="creative-grid"></div>
+      </section>
+
+      <section id="loi" class="view">
+        <div class="section-intro"><p class="eyebrow">LOI AGENT</p><h2>What the consultation scores say</h2><p>Aggregates from the newest LOI filled workbook: no lead, host or meeting identifier is read. Planner turns the same scores into signing probabilities inside EV; this page checks those probabilities against what actually signed.</p></div>
+        <div class="creative-toolbar">
+          <span id="loiFreshness" class="timestamp">LOI feed not computed yet</span>
+          <button id="loiRefresh" class="secondary-button">Recompute from the newest file</button>
+        </div>
+        <div id="loiContent" class="creative-grid"></div>
+      </section>
+
+      <section id="plannerWorkspace" class="view planner-workspace">
+        <div class="planner-intro">
+          <div>
+            <p class="eyebrow">PRODUCTION ALLOCATION WORKSPACE</p>
+            <h2>Planner budget allocator</h2>
+            <p>This is the existing Planner application, kept intact inside the shared control center. Its own review, approval and export safeguards still apply.</p>
+          </div>
+          <div class="runtime-status">
+            <span id="plannerRuntimeDot" class="runtime-dot"></span>
+            <div><strong id="plannerRuntimeLabel">Checking local services…</strong><small id="plannerRuntimeDetail">Backend :8000 · interface :5173</small></div>
+          </div>
+        </div>
+        <div id="plannerOffline" class="planner-offline" hidden>
+          <strong>Planner is not running yet.</strong>
+          <p>Start the complete workspace with <code>Start Control Center.cmd</code>. This starts the allocator locally without changing GitHub.</p>
+          <button id="retryPlanner" class="secondary-button">Check again</button>
+        </div>
+        <div id="plannerFrameWrap" class="planner-frame-wrap" hidden>
+          <iframe id="plannerFrame" title="Planner budget allocator" src="about:blank" loading="lazy"></iframe>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
