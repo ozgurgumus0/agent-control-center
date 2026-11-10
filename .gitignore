@@ -1,0 +1,37 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*service_account*.json
+credentials*.json
+*.pem
+*.key
+
+# Runtime state, logs and caches (the app recreates them)
+runtime/*
+!runtime/.gitkeep
+control_state.json
+*.log
+
+# Data and generated deliverables
+data/
+*.csv
+*.csv.gz
+*.xlsx
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.parquet
+*.jsonl
+*.db
